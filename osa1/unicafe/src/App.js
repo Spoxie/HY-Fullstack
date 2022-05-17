@@ -1,11 +1,47 @@
 import { useState } from "react";
 
 const Button = (props) => {
+  return <button onClick={props.handler}>{props.text}</button>;
+};
+
+const Statistics = (props) => {
+  const numbers = props.allClicks.reduce(
+    (total, currentvalue) => (total = total + currentvalue),
+    0
+  );
+  const average = numbers / props.allClicks.length;
+  const percentage = props.good / (props.neutral + props.bad);
+
   return (
     <div>
-      <button onClick={props.handler}>{props.text}</button>
+      <StatisticsLine
+        text="total"
+        value={props.good + props.bad + props.neutral}
+      />
+      <StatisticsLine text="average" value={average} />
+      <StatisticsLine text="percentage" value={percentage * 100} />
     </div>
   );
+};
+
+const StatisticsLine = (props) => {
+  console.log(props);
+  if (props === 0) {
+    return (
+      <div>
+        <p>no data</p>
+      </div>
+    );
+  } else {
+    return (
+      <div>
+        <table>
+          <td>{props.text}</td>
+          <td>{props.value}</td>
+        </table>
+      </div>
+    );
+  }
 };
 
 function App() {
@@ -14,11 +50,6 @@ function App() {
   const [neutral, setNeutral] = useState(0);
   const [allClicks, setAll] = useState([]);
   console.log(allClicks.length);
-  const numbers = allClicks.reduce(
-    (total, currentvalue) => (total = total + currentvalue),
-    0
-  );
-  const average = numbers / allClicks.length;
 
   const handleGood = () => {
     setGood(good + 1);
@@ -35,18 +66,35 @@ function App() {
     setAll(allClicks.concat(0));
   };
 
+  const propobject = {
+    good: good,
+    bad: bad,
+    neutral: neutral,
+    allClicks: allClicks,
+  };
+
   return (
     <div>
       <h1>Give feedback pls</h1>
+
       <Button text="good" handler={handleGood} />
       <Button text="bad" handler={handleBad} />
       <Button text="neutral" handler={handleNeutral} />
       <h1>Stats</h1>
-      <p>good {good}</p>
-      <p>bad {bad}</p>
-      <p>neutral {neutral}</p>
-      <p>{good + bad + neutral}</p>
-      <p>{average}</p>
+      {allClicks.length === 0 && (
+        <div>
+          <h1>no stats</h1>
+        </div>
+      )}
+
+      {allClicks.length > 0 && (
+        <div>
+          <StatisticsLine text="good" value={good} />
+          <StatisticsLine text="bad" value={bad} />
+          <StatisticsLine text="neutral" value={neutral} />
+          <Statistics {...propobject} />
+        </div>
+      )}
     </div>
   );
 }
