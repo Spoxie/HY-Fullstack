@@ -1,48 +1,42 @@
+import Filter from "./Components/Filter";
+import PersonForm from "./Components/PersonForm";
+import PersonList from "./Components/PersonList";
 import { useState } from "react";
 
 const App = () => {
-  const [persons, setPersons] = useState([{ name: "Arto Hellas" }]);
-  const [newName, setNewName] = useState("");
+  const [persons, setPersons] = useState([]);
+  const [test, setTest] = useState([
+    { name: "Arto Hellas", number: "040-123456" },
+    { name: "Ada Lovelace", number: "39-44-5323523" },
+    { name: "Dan Abramov", number: "12-43-234345" },
+    { name: "Mary Poppendieck", number: "39-23-6423122" },
+  ]);
+  const [filter, setFilter] = useState();
 
-  const addName = (event) => {
-    event.preventDefault();
-    const nameObject = {
-      name: newName,
-    };
-    console.log(nameObject.name);
-    if (persons.some((person) => person.name === nameObject.name)) {
-      alert(newName + " on jo listassa!");
-      setNewName("");
+  function handleChange(value) {
+    setPersons(value);
+  }
+  function addName(newName) {
+    if (newName === undefined) {
+      alert("ei nimeä");
+      return;
     } else {
-      setPersons(persons.concat(nameObject));
-      setNewName("");
+      setTest((prev) => [...prev, newName]);
+      console.log(test);
     }
-  };
-  const handleChange = (event) => {
-    console.log(event.target.value);
-    setNewName(event.target.value);
-  };
+  }
+
+  function handleFilter(filters) {
+    setFilter(filters);
+  }
 
   return (
     <div>
       <h2>Phonebook</h2>
-      <form onSubmit={addName}>
-        <div>
-          name: <input value={newName} onChange={handleChange} />
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
-      <div>debug: {newName}</div>
+      <Filter onChange={handleFilter} />
       <h2>Numbers</h2>
-      <ul>
-        {persons.map((person, index) => (
-          <li key={index} person={person}>
-            {person.name}
-          </li>
-        ))}
-      </ul>
+      <PersonForm list={test} onChange={handleChange} onSubmit={addName} />
+      <PersonList list={test} filter={filter} />;
     </div>
   );
 };
