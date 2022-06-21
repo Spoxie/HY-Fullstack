@@ -1,19 +1,19 @@
-import { useState } from "react";
+import axios from "axios";
 
-const PersonList = ({ list, filter }) => {
+function PersonList(props) {
   return (
     <div>
       <ul>
-        {list
-          .filter((person) => person.name.includes(filter))
-          .map((filterPerson, i) => (
+        {props.list
+          .filter((filterPerson) => filterPerson.name.includes(props.filter))
+          .map((person, i) => (
             <li key={i}>
-              {filterPerson.name} {filterPerson.number}
+              {person.name} {person.number}
             </li>
           ))}
       </ul>
     </div>
   );
-};
+}
 
 export default PersonList;
