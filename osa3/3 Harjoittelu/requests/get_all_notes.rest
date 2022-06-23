@@ -1,0 +1,8 @@
+
+POST http://localhost:3001/api/notes/
+content-type: application/json
+
+{
+    "content": "Postman on kiva ohjelma, mutta niin on myös REST Client",
+    "important": true
+}
