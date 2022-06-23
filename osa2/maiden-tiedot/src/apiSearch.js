@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 
+import Temp from "./temp";
 import axios from "axios";
 
 function ApiSearch() {
@@ -10,7 +11,6 @@ function ApiSearch() {
     axios
       .get(`https://restcountries.com/v3.1/name/${search}`)
       .then((response) => {
-        console.log(response.data);
         setCountries(response.data);
       });
   }, [search]);
@@ -63,6 +63,7 @@ function ApiSearch() {
                 ))}
               </ul>
               <img src={country.flags.png} alt="flag" />
+              <Temp latlong={country.latlng} />
             </div>
           );
         })}
