@@ -4,20 +4,19 @@ import Filter from "./Components/Filter";
 import PersonForm from "./Components/PersonForm";
 import PersonList from "./Components/PersonList";
 import axios from "axios";
+import personsService from "./services/persons";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
-  const [test, setTest] = useState([]);
+  const [test, setTest] = useState([]); //ihmiset listataan tässä
   const [filter, setFilter] = useState("");
-  const hook = () => {
-    console.log("effect");
-    axios.get("http://localhost:3001/persons").then((response) => {
-      console.log("promise fulfilled");
-      setTest(response.data);
-    });
-  };
+
   console.log(test);
-  useEffect(hook, []);
+  useEffect(() => {
+    personsService.getAll().then((initPersons) => {
+      setTest(initPersons);
+    });
+  }, []);
 
   function handleChange(value) {
     setPersons(value);

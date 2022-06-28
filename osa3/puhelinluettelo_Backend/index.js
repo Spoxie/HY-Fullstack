@@ -1,6 +1,14 @@
 const express = require("express");
 const app = express();
+var morgan = require("morgan");
 app.use(express.json());
+
+morgan.token("body", (req, res) => JSON.stringify(req.body));
+app.use(
+  morgan(
+    ":method Metodi koskettaa url osoitetta :url :status Response aika - :response-time  :body"
+  )
+);
 
 let persons = [
   {

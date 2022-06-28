@@ -1,3 +1,4 @@
+import personsService from "../services/persons";
 import { useState } from "react";
 
 const PersonForm = (props) => {
@@ -7,7 +8,13 @@ const PersonForm = (props) => {
   const add = (event) => {
     event.preventDefault();
     console.log(FormValue);
-    props.onSubmit(FormValue);
+    const personObject = {
+      name: FormValue.name,
+      number: FormValue.number,
+    };
+    personsService.create(personObject).then((returnedPerson) => {
+      setPersons(persons.concat(returnedPerson));
+    });
   };
 
   const handleChange = (event) => {
