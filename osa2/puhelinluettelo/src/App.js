@@ -21,6 +21,7 @@ const App = () => {
   function handleChange(value) {
     setPersons(value);
   }
+
   function addName(newName) {
     if (newName === undefined) {
       alert("ei nimeä");

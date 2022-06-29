@@ -1,26 +1,34 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
+import Filter from "./Components/Filter";
+import PersonForm from "./Components/PersonForm";
+import Persons from "./Components/Persons";
+import axios from "axios";
+import personsService from "./services/persons";
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: "Arto Hellas", number: "06012341234" },
-  ]);
-  const [newName, setNewName] = useState({ name: "", number: "" });
+  const [persons, setPersons] = useState([]);
+  const [newName, setNewName] = useState({ name: "", number: "", id: "" });
   const [filter, setFilter] = useState("");
+
+  useEffect(() => {
+    personsService.getAll().then((initResponse) => {
+      setPersons(initResponse);
+    });
+  }, []);
 
   const addPersons = (event) => {
     event.preventDefault();
+
     const nameObject = {
       name: newName.name,
       number: newName.number,
     };
 
-    if (persons.some((person) => person.name === nameObject.name)) {
-      alert(`${newName.name} is already added to phonebook`);
-      return;
-    } else {
+    if (persons.some((person) => person.name !== nameObject.name)) {
+      personsService.create(nameObject);
       setPersons(persons.concat(nameObject));
-    }
-    console.log(persons);
+    } else console.log("Hello");
   };
 
   const handleChange = (event) => {
@@ -31,35 +39,23 @@ const App = () => {
     console.log(event.target.value);
     setFilter(event.target.value);
   };
+  const removePerson = (obj) => {
+    window.confirm(
+      "Are you sure to delete " + obj.name + " with an id of " + obj.id
+    )
+      ? personsService.remove(obj).then((responsedata) => {
+          setPersons(persons.splice(obj.id, persons.length));
+        })
+      : console.log("person not removed");
+  };
 
   return (
     <div>
       <h2>Phonebook</h2>
-      <form onSubmit={addPersons}>
-        <div>
-          Name
-          <input value={newName.name} onChange={handleChange} name="name" />
-          <br></br>
-          Number
-          <input value={newName.number} onChange={handleChange} name="number" />
-          <br></br>
-          Filter
-          <input value={filter} onChange={handleFilter} name="filter"></input>
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+      <PersonForm handle={handleChange} add={addPersons} name={newName} />
+      <Filter filter={filter} handle={handleFilter} />
       <h2>Numbers</h2>
-      <ul>
-        {persons
-          .filter((filterPerson) => filterPerson.name.includes(filter))
-          .map((person, i) => (
-            <li key={i}>
-              {person.name} {person.number}
-            </li>
-          ))}
-      </ul>
+      <Persons filter={filter} persons={persons} remove={removePerson} />
     </div>
   );
 };
