@@ -8,7 +8,7 @@ import personsService from "./services/persons";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
-  const [newName, setNewName] = useState({ name: "", number: "", id: "" });
+  const [newName, setNewName] = useState({ name: "", number: "" });
   const [filter, setFilter] = useState("");
 
   useEffect(() => {
@@ -28,11 +28,12 @@ const App = () => {
     };
 
     if (persons.some((person, i) => person.name === newName.name)) {
+      const same = persons.find((obj) => obj.name === newName.name);
       window.confirm(
         "Nimi " + newName.name + " on jo listassa, korvataanko numero"
       )
-        ? personsService.update(nameObject)
-        : console.log("ei korvata");
+        ? personsService.update(same.id, nameObject)
+        : alert("ei korvata");
     } else {
       const nameObject = {
         name: newName.name,
