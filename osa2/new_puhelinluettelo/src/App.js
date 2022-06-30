@@ -20,20 +20,29 @@ const App = () => {
   const addPersons = (event) => {
     event.preventDefault();
     console.log(newName.id);
-    const newNumber = newName.number;
 
     const nameObject = {
       name: newName.name,
       number: newName.number,
     };
 
-    if (persons.some((person, i) => person.name === newName.name)) {
+    if (persons.some((person) => person.name === newName.name)) {
       const same = persons.find((obj) => obj.name === newName.name);
+
       window.confirm(
         "Nimi " + newName.name + " on jo listassa, korvataanko numero"
       )
-        ? personsService.update(same.id, nameObject)
-        : alert("ei korvata");
+        ? personsService.update(same.id, nameObject) &&
+          setPersons((current) =>
+            current.map((obj) => {
+              if (obj.id === same.id) {
+                return { ...obj, name: newName.name, number: newName.number };
+              }
+              return obj;
+            })
+          )
+        : //setPersons()
+          alert("ei korvata");
     } else {
       const nameObject = {
         name: newName.name,
