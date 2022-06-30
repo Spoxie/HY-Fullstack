@@ -1,5 +1,4 @@
 const Persons = ({ filter, persons, remove }) => {
-  console.log(persons);
   return (
     <div>
       {persons

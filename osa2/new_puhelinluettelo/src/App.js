@@ -19,16 +19,28 @@ const App = () => {
 
   const addPersons = (event) => {
     event.preventDefault();
+    console.log(newName.id);
+    const newNumber = newName.number;
 
     const nameObject = {
       name: newName.name,
       number: newName.number,
     };
 
-    if (persons.some((person) => person.name !== nameObject.name)) {
+    if (persons.some((person, i) => person.name === newName.name)) {
+      window.confirm(
+        "Nimi " + newName.name + " on jo listassa, korvataanko numero"
+      )
+        ? personsService.update(nameObject)
+        : console.log("ei korvata");
+    } else {
+      const nameObject = {
+        name: newName.name,
+        number: newName.number,
+      };
       personsService.create(nameObject);
       setPersons(persons.concat(nameObject));
-    } else console.log("Hello");
+    }
   };
 
   const handleChange = (event) => {
