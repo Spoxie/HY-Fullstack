@@ -21,6 +21,7 @@ const update = (id, newObject) => {
 
 const remove = (obj) => {
   const request = axios.delete(`${baseUrl}/${obj.id}`, { data: obj.id });
+  console.log(obj);
   return request.then((response) => response.data);
 };
 
