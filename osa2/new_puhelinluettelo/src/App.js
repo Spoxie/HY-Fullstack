@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import Filter from "./Components/Filter";
 import PersonForm from "./Components/PersonForm";
 import Persons from "./Components/Persons";
-import axios from "axios";
 import personsService from "./services/persons";
 
 const App = () => {
