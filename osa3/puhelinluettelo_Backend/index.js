@@ -5,6 +5,9 @@ var cors = require("cors");
 app.use(express.json());
 app.use(cors());
 app.use(express.static("build"));
+require("dotenv").config();
+
+const Person = require("./models/Person");
 
 morgan.token("body", (req, res) => JSON.stringify(req.body));
 app.use(
@@ -71,7 +74,8 @@ app.get("/info", (req, res) => {
 app.post("/api/persons", (req, res) => {
   req.body.id = Math.floor(Math.random() * 100);
   const person = req.body;
-  if (!req.body.name) {
+
+  if (!person.name) {
     return res.status(400).json({
       error: "No name given",
     });
@@ -81,13 +85,19 @@ app.post("/api/persons", (req, res) => {
       error: "No number given",
     });
   }
-  if (persons.some((elemnet) => elemnet.name === req.body.name)) {
+  if (persons.some((element) => element.name === req.body.name)) {
     return res.status(400).json({
       error: "Name already in the list",
     });
   }
-  persons = persons.concat(person);
-  res.json(person);
+
+  const personObject = new Person({
+    name: person.name,
+    number: person.number,
+  });
+  personObject.save().then((savedPerson) => {
+    res.json(savedPerson);
+  });
 });
 
 app.delete("/api/persons/:id", (request, response) => {

@@ -10,8 +10,12 @@ const getAll = () => {
 };
 
 const create = (newObject) => {
-  const request = axios.post(baseUrl, newObject);
-  return request.then((response) => response.data);
+  if (!newObject) {
+    return;
+  } else {
+    const request = axios.post(baseUrl, newObject);
+    return request.then((response) => response.data);
+  }
 };
 
 const update = (id, newer) => {

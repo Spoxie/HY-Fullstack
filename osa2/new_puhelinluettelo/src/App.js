@@ -58,6 +58,10 @@ const App = () => {
         setErrorMessage(null);
         setError(null);
       }, 5000);
+    }
+    if (!newName.name) {
+      console.log("ei nimeä");
+      return;
     } else {
       const nameObject = {
         name: newName.name,
