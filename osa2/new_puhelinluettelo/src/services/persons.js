@@ -1,12 +1,11 @@
 import axios from "axios";
 
-const baseUrl = "/api/persons";
+const baseUrl = "http://localhost:3001/api/persons";
 
 const getAll = () => {
   const request = axios.get(baseUrl);
-  return request.then((response) => {
-    return response.data;
-  });
+
+  return request.then((response) => response.data);
 };
 
 const create = (newObject) => {
@@ -19,14 +18,11 @@ const create = (newObject) => {
 };
 
 const update = (id, newer) => {
-  console.log(id);
-  console.log(newer);
   return axios.put(`${baseUrl}/${id}`, newer);
 };
 
 const remove = (obj) => {
   const request = axios.delete(`${baseUrl}/${obj.id}`, { data: obj.id });
-  console.log(obj);
   return request.then((response) => response.data);
 };
 

@@ -5,7 +5,7 @@ const Persons = ({ filter, persons, remove }) => {
         .filter((filterPerson) => filterPerson.name.includes(filter))
         .map((person, i) => (
           <li key={i}>
-            {person.name} {person.number}
+            {person.name} {person.number} {person.id}
             <button key={i} onClick={() => remove(person)}>
               Delete number
             </button>

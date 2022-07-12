@@ -9,14 +9,14 @@ import personsService from "./services/persons";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
-  const [newName, setNewName] = useState({ name: "", number: "" });
+  const [newName, setNewName] = useState({ name: "", number: "", id: "" });
   const [filter, setFilter] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    personsService.getAll().then((initResponse) => {
-      setPersons(initResponse);
+    personsService.getAll().then((persons) => {
+      setPersons(persons);
     });
   }, []);
 
@@ -66,6 +66,7 @@ const App = () => {
       const nameObject = {
         name: newName.name,
         number: newName.number,
+        id: newName.id,
       };
 
       personsService.create(nameObject);
@@ -90,7 +91,7 @@ const App = () => {
   };
   const removePerson = (obj) => {
     window.confirm(
-      "Are you sure to delete " + obj.name + " with an id of " + obj.id
+      "Haluatko poistaa henkilön " + obj.name + " jonka id on " + obj.id
     )
       ? personsService
           .remove(obj)
