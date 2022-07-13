@@ -12,8 +12,7 @@ const create = (newObject) => {
   if (!newObject) {
     return;
   } else {
-    const request = axios.post(baseUrl, newObject);
-    return request.then((response) => response.data);
+    return axios.post(baseUrl, newObject);
   }
 };
 

@@ -27,58 +27,38 @@ const App = () => {
       number: newName.number,
     };
 
-    if (persons.some((person) => person.name === newName.name)) {
-      const same = persons.find((obj) => obj.name === newName.name);
+    const doesExist = persons.find((one) => one.name === nameObject.name);
+    console.log(doesExist);
+    if (doesExist) {
+      const confirm = window.confirm("on jo olemassa, korvataanko");
+      if (confirm) {
+        console.log(doesExist.id);
+        personsService
+          .update(doesExist.id, nameObject)
 
-      window.confirm(
-        "Nimi " + newName.name + " on jo listassa, korvataanko numero"
-      )
-        ? personsService.update(same.id, nameObject).then(
-            setPersons((current) =>
-              current.map((obj) => {
-                if (obj.id === same.id) {
-                  setErrorMessage(`korjattu ${obj.name} numero`);
-                  setTimeout(() => {
-                    setErrorMessage(null);
-                  }, 5000);
-                  return {
-                    ...obj,
-                    name: newName.name,
-                    number: newName.number,
-                  };
-                }
-                return obj;
-              })
-            )
-          )
-        : //setPersons()
-          setErrorMessage("Ei korjata");
-
-      setTimeout(() => {
-        setErrorMessage(null);
-        setError(null);
-      }, 5000);
-    }
-    if (!newName.name) {
-      console.log("ei nimeä");
+          .then((response) => {
+            setPersons(
+              persons.map((p) => (p.id !== doesExist.id ? response : p))
+            );
+          })
+          .catch((error) => {
+            console.log(error.message);
+          });
+        setPersons(persons.filter((p) => p.id !== doesExist.id));
+      }
       return;
-    } else {
-      const nameObject = {
-        name: newName.name,
-        number: newName.number,
-        id: newName.id,
-      };
-
-      personsService.create(nameObject);
-      setPersons(persons.concat(nameObject));
-      setErrorMessage("Henkilö lisätty");
-      setError(false);
-
-      setTimeout(() => {
-        setErrorMessage(null);
-        setError(null);
-      }, 5000);
     }
+
+    personsService.create(nameObject).then((response) => {
+      setPersons(persons.concat(response.data));
+    });
+    setErrorMessage("Henkilö lisätty");
+    setError(false);
+    console.log(persons);
+    setTimeout(() => {
+      setErrorMessage(null);
+      setError(null);
+    }, 5000);
   };
 
   const handleChange = (event) => {

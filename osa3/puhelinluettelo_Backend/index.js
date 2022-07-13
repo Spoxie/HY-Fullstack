@@ -26,7 +26,7 @@ app.use(errorHandler);
 
 app.get("/api/persons", (req, res) => {
   PersonInfo.find({}).then((person) => {
-    res.json(person);
+    res.json(person.map((person) => person.toJSON()));
   });
 });
 
@@ -76,30 +76,29 @@ app.post("/api/persons", (req, res) => {
     name: person.name,
     number: person.number,
   });
-
-  personObject.save().then((savedPerson) => {
-    console.log(savedPerson._id);
-    res.json(savedPerson);
-  });
+  console.log(personObject); //id tulee backendiin, mutta ei ehdi fronttiin?
+  personObject
+    .save()
+    .then((person) => person.toJSON())
+    .then((formatted) => {
+      res.json(formatted);
+    });
 });
 
-app.put("/api/persons/:id"),
-  (req, res, next) => {
-    const body = req.body;
-    const person = {
-      name: body.name,
-      number: body.number,
-    };
-
-    PersonInfo.findByIdAndUpdate(req.params.id, person, { new: true })
-      .then((updatedPerson) => {
-        res.json(updatedPerson);
-      })
-      .catch((error) => next(error));
+app.put("/api/persons/:id", (req, res, next) => {
+  const body = req.body;
+  const person = {
+    name: body.name,
+    number: body.number,
   };
+  PersonInfo.findByIdAndUpdate(req.params.id, person, { new: true })
+    .then((updatedPerson) => {
+      res.json(updatedPerson.toJSON());
+    })
+    .catch((error) => next(error));
+});
 
 app.delete("/api/persons/:id", (req, res, next) => {
-  console.log(req.params);
   PersonInfo.findByIdAndRemove(req.params.id)
     .then((result) => {
       console.log("poistettu ID:llä" + req.params.id);

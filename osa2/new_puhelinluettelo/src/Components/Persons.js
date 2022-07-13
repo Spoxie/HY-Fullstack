@@ -5,7 +5,7 @@ const Persons = ({ filter, persons, remove }) => {
         .filter((filterPerson) => filterPerson.name.includes(filter))
         .map((person, i) => (
           <li key={i}>
-            {person.name} {person.number} {person.id}
+            {person.name} {person.number}
             <button key={i} onClick={() => remove(person)}>
               Delete number
             </button>
@@ -14,5 +14,6 @@ const Persons = ({ filter, persons, remove }) => {
     </div>
   );
 };
+
 export default Persons;
 //huom jatkoa varten; tuo button on "funktio", jonka avulla voi laittaa kokonaisen objektin toiseen komponenttiin
